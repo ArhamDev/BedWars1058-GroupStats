@@ -1,0 +1,29 @@
+Database Layout Plan: 
+ 
+ DataSource: HikariCP
+ ORM:        ORMLite
+
+ Making seprate tables for each player's group & overall statistics; 
+ Storing "GroupNode" object into database using ormlite.
+
+Overall Statistics & Group Statistics:
+* Games Played
+
+* Beds Broken
+* Beds Lost
+
+* Kills
+* Deaths
+* Final Kills
+* Final Deaths
+* Final K/D Ratio
+
+* Wins
+* Losses: 348
+
+* Winsteak
+* Highest Winstreak Reached
+
+Planned Features:
+- PlaceholderAPI extention.
+- Advanced Developer-API
