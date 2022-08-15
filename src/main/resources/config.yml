@@ -1,0 +1,8 @@
+DATABASE:
+  # true = MySQL, false = SQLite
+  ENABLED: false
+  ADDRESS: '127.0.0.1'
+  PORT: 3306
+  DATABASE: 'database'
+  USERNAME: 'username'
+  PASSWORD: 'password'

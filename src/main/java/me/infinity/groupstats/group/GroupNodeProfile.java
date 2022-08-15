@@ -1,5 +1,7 @@
 package me.infinity.groupstats.group;
 
+import com.google.common.base.Charsets;
+import com.google.common.hash.Hashing;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -19,7 +21,7 @@ public class GroupNodeProfile {
   @DatabaseField(columnName = "UUID", id = true, dataType = DataType.UUID)
   private UUID uniqueID;
 
-  @DatabaseField(columnName = "JSON_VALUE", dataType = DataType.STRING)
+  @DatabaseField(columnName = "JSON_VALUE", dataType = DataType.LONG_STRING)
   private String jsonValue;
 
   public GroupNodeProfile() {
@@ -30,7 +32,7 @@ public class GroupNodeProfile {
   }
 
   public GroupNodeContainer getGroupNodeContainer() {
-    return new GroupNodeContainer().fromJson(jsonValue);
+    return GroupStatsPlugin.getGson().fromJson(jsonValue, GroupNodeContainer.class);
   }
 
   public GroupNodeProfile get() throws SQLException {
@@ -41,14 +43,16 @@ public class GroupNodeProfile {
   }
 
   public GroupNodeProfile save() throws SQLException {
-    this.jsonValue = this.getGroupNodeContainer().toJson();
     Optional<GroupNodeProfile> profileOptional = Optional.ofNullable(instance.getDatabaseManager().getProfileDao().queryForId(uniqueID));
 
     if (profileOptional.isPresent()) {
       instance.getDatabaseManager().getProfileDao().update(this);
       instance.getDatabaseManager().getProfileDao().refresh(this);
-    } else instance.getDatabaseManager().getProfileDao().create(this);
-
-    return profileOptional.get();
+      return this;
+    } else {
+      this.jsonValue = "{}";
+      instance.getDatabaseManager().getProfileDao().create(this);
+      return this;
+    }
   }
 }

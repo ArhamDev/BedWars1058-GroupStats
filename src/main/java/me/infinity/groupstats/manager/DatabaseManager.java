@@ -14,6 +14,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -25,7 +27,10 @@ public class DatabaseManager {
   private final GroupStatsPlugin instance;
   private final HikariDataSource hikariDataSource;
   private final Executor hikariExecutor = Executors.newFixedThreadPool(4);
+
   private Dao<GroupNodeProfile, UUID> profileDao;
+  private Map<UUID, GroupNodeProfile> cache;
+
   private ConnectionSource connectionSource;
 
   private String address, database, username, password;
@@ -68,6 +73,7 @@ public class DatabaseManager {
     } catch (Exception ex) {
       ex.printStackTrace();
     }
+    this.cache = new HashMap<>();
   }
 
   private void loadCredentials() {
